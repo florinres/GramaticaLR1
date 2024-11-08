@@ -24,14 +24,21 @@ public class AutomatAPD {
         System.out.println("Starting with sequence :" + startSequence);
         int startNumber = 0;
 
+        while(startSequence.length()>1) {
+            String enterWord = getTermFromEnterSequence();
+            int indexForTa = getIndexForTa(enterWord);
+            String dR = lookAtActionTable(startNumber, indexForTa);
+            System.out.println("Pushing: " + enterWord + " and " + dR.charAt(1));
+            stackSequence.push(enterWord);
+            stackSequence.push(dR.charAt(1) + "");
+            startNumber = Integer.parseInt(dR.charAt(1)+"");
+        }
+        System.out.println("Ending with stack :" + stackSequence);
+        System.out.println("Done");
+    }
 
-        String enterWord = getTermFromEnterSequence();
-        int indexForTa = getIndexForTa(enterWord);
-        String dR = lookAtActionTable(startNumber, indexForTa);
-        System.out.println("Pushing: " + enterWord + " and " + dR);
-        stackSequence.push(enterWord);
-        stackSequence.push(dR.charAt(1) + "");
-
+    private boolean isStartSequenceEmpty() {
+        return stackSequence.isEmpty();
     }
 
     private String lookAtActionTable(int startNumber, int indexForTa) {
@@ -70,7 +77,8 @@ public class AutomatAPD {
     }
 
     private void removeTerm(String term) {
-        startSequence = startSequence.replace(term, "");
-        System.out.println("Removed: " + term + " from sequence :" + startSequence);
+        String lastCharOfTerm = term.substring(term.length() - 1);
+        int indexOfTerm = startSequence.indexOf(lastCharOfTerm);
+        startSequence = startSequence.substring(indexOfTerm + 1);
     }
 }
