@@ -3,13 +3,13 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Productions {
-    String[][]productions = new String[10][2];
+    String[][]productions = new String[7][2];
 
     Productions(){
         System.out.println("Finding productions");
         int index = 0;
         try {
-            File file = new File("C:\\Users\\nxg06737\\OneDrive - NXP\\Desktop\\student_stuff\\GramaticaLR1\\src\\productions.txt");
+            File file = new File("D:\\repo\\GramaticaLR1\\src\\productions.txt");
             Scanner sc = new Scanner(file);
             int indexLine=0;
             while(sc.hasNextLine()){
@@ -23,5 +23,9 @@ public class Productions {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String[][] getProductions(){
+        return productions;
     }
 }

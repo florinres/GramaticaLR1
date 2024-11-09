@@ -10,7 +10,7 @@ public class TA {
     TA(){
         System.out.println("Reading total symbols");
         try {
-            File file = new File("C:\\Users\\nxg06737\\OneDrive - NXP\\Desktop\\student_stuff\\Gramatica-LR1\\src\\TA.txt");
+            File file = new File("D:\\repo\\GramaticaLR1\\src\\TA.txt");
             Scanner sc = new Scanner(file);
             System.out.println("Reading symbols");
             while(sc.hasNext()){
@@ -24,7 +24,7 @@ public class TA {
                     "\nBegin phase two");
             symbolsDR = new String[12][6];
             try{
-                File file1 = new File("C:\\Users\\nxg06737\\OneDrive - NXP\\Desktop\\student_stuff\\Gramatica-LR1\\src\\TA_states.txt");
+                File file1 = new File("D:\\repo\\GramaticaLR1\\src\\TA_states.txt");
                 Scanner sc1 = new Scanner(file1);
                 int lineCounter = 0;
                 while(sc1.hasNext()){

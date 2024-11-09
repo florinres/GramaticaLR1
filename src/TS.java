@@ -7,7 +7,7 @@ public class TS {
     TS(){
         System.out.println("Reading the jump table");
         try {
-            File file = new File("C:\\Users\\nxg06737\\OneDrive - NXP\\Desktop\\student_stuff\\Gramatica-LR1\\src\\TS.txt");
+            File file = new File("D:\\repo\\GramaticaLR1\\src\\TS.txt");
             Scanner sc = new Scanner(file);
             int indexRow = 0;
             while (sc.hasNextLine()) {
