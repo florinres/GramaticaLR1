@@ -25,13 +25,6 @@ public class AutomatAPD {
         System.out.println("Starting with stack :" + stackSequence);
         System.out.println("Starting with sequence :" + startSequence
                 + "\nexecuting initial operation");
-        String enterWord = getTermFromEnterSequence();
-        int indexForTa = getIndexForTa(enterWord);
-        String dR = lookAtActionTable(topOfStackToInt(), indexForTa);
-        System.out.println("Pushing word and number");
-        stackSequence.push(enterWord);
-        stackSequence.push(dR.charAt(1)+"");
-        System.out.println("Pushed: " + enterWord + " " + dR.charAt(1));
         while(startSequence.length() > 1){
             System.out.println("Looking at stack: " + stackSequence
                     +"\npeeking from stack...");
@@ -39,22 +32,40 @@ public class AutomatAPD {
             String termFromSequence = getTermFromEnterSequence();
             System.out.println("Looking for combination: " + termFromStack + " " + termFromSequence);
             int indexTa = getIndexForTa(termFromSequence);
-            dR = lookAtActionTable(Integer.parseInt(termFromStack), indexTa);
-            if ((dR.charAt(0) + "").equals("d")){
+            String dR = lookAtActionTable(getStateNumber(), indexTa);
+            if (isShift(dR)){
                 System.out.println("Its a shift!");
-                stackShifting(dR.charAt(1) + "");
-            } else{
+                String pushState = dR.charAt(1) + "";
+                stackSequence.push(termFromSequence);
+                stackSequence.push(pushState);
+                removeTerm(termFromSequence);
+            } else {
                 System.out.println("Its a reduction!");
-                stackReduction(dR.charAt(1) + "");
+                String pushState = dR.charAt(1) + "";
+                stackReduction(pushState);
+                lookAtJumpTable();
             }
-            System.out.println("Jumping at next state");
-            jumpToNextState();
         }
         System.out.println("Ending with stack :" + stackSequence);
         System.out.println("Done");
     }
 
-    private void jumpToNextState() {
+    private boolean isShift(String dR) {
+        String compareChar = dR.charAt(0) + "";
+        if (compareChar.equals("d")){
+            return true;
+        }
+
+        return false;
+    }
+
+    private int getStateNumber() {
+        Stack<String> copyStack = (Stack<String>) stackSequence.clone();
+
+        return Integer.parseInt(copyStack.peek());
+    }
+
+    private void lookAtJumpTable() {
         String[][] jumpTable = ts.getActionTable();
         Stack<String> copyStack = (Stack<String>) stackSequence.clone();
         String newStateTerm = copyStack.pop();
@@ -79,9 +90,9 @@ public class AutomatAPD {
         return false;
     }
 
-    private void stackReduction(String r) {
+    private void stackReduction(String numberOfProduction) {
         String[][] productions = pd.getProductions();
-        Integer a = Integer.parseInt(r) - 1;
+        Integer a = Integer.parseInt(numberOfProduction) - 1;
         String reduction = productions[a][0];
         stackSequence.pop();
         stackSequence.pop();
@@ -122,8 +133,7 @@ public class AutomatAPD {
         for (String i : startSequence.split("")) {
             term+= i;
             for (String j : terms) {
-                if (j.equals(term)) {
-                    removeTerm(term);
+                if (j.equals(term)) {;
                     return term;
                 }
             }
