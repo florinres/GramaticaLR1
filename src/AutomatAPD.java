@@ -22,8 +22,7 @@ public class AutomatAPD {
 
     public void fabricate(){
         System.out.println("Starting with stack :" + stackSequence);
-        System.out.println("Starting with sequence :" + startSequence
-                + "\nexecuting initial operation");
+        System.out.println("Starting with sequence :" + startSequence);
         while(startSequence.length() > 1){
             System.out.println("Looking at stack: " + stackSequence
                     +"\npeeking from stack...");
