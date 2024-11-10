@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Scanner;
 
@@ -7,7 +6,7 @@ public class AutomatAPD {
     TS ts;
     Productions pd;
     Stack<String> stackSequence = new Stack<>();
-    String startSequence = new String();
+    String startSequence;
 
     AutomatAPD() {
         ta = new TA();
@@ -38,6 +37,7 @@ public class AutomatAPD {
                 String pushState = dR.charAt(1) + "";
                 stackSequence.push(termFromSequence);
                 stackSequence.push(pushState);
+                assert termFromSequence != null;
                 removeTerm(termFromSequence);
             } else {
                 System.out.println("Its a reduction!");
@@ -51,12 +51,12 @@ public class AutomatAPD {
     }
 
     private boolean isShift(String dR) {
-        String compareChar = dR.charAt(0) + "";
-        if (compareChar.equals("d")){
-            return true;
+        String compareChar;
+        if (dR.isEmpty()){
+            throw new RuntimeException("Unsupported char");
         }
-
-        return false;
+        compareChar = dR.charAt(0) + "";
+        return compareChar.equals("d");
     }
 
     private int getStateNumber() {
@@ -83,38 +83,33 @@ public class AutomatAPD {
 
     private boolean hasStateBeenFound(String s, String newStateTerm) {
         String compareTerm = s.charAt(0) + "";
-        if (compareTerm.equals(newStateTerm)){
-            return true;
-        }
-
-        return false;
+        return compareTerm.equals(newStateTerm);
     }
 
     private void stackReduction(String numberOfProduction) {
         String[][] productions = pd.getProductions();
-        Integer a = Integer.parseInt(numberOfProduction) - 1;
+        int a = Integer.parseInt(numberOfProduction) - 1;
         String reduction = productions[a][0];
         stackSequence.pop();
         stackSequence.pop();
         stackSequence.push(reduction);
     }
 
-    private void stackShifting(String d) {
-        String[][] production = pd.getProductions();
-    }
-
-    private int topOfStackToInt() {
-        return Integer.parseInt(stackSequence.peek());
-    }
-
     //obtains your shift or reduction
-    private String lookAtActionTable(int startNumber, int indexForTa) {
+    private String lookAtActionTable(int columnIndex, int indexForTa) {
         String [][]actionTable = ta.getActionTable();
-            if (actionTable[startNumber][indexForTa] == null) {
-                return "-1";
+            if (actionTable[columnIndex][indexForTa] == null) {
+                throw new UndefinedBehaviour("State not defined at column: " + columnIndex + " " +
+                        "\nand term " + getUndefinedStateTerm(indexForTa));
             }
 
-        return actionTable[startNumber][indexForTa];
+        return actionTable[columnIndex][indexForTa];
+    }
+
+    private String getUndefinedStateTerm(int index) {
+        String []states = ta.getTerms();
+
+        return states[index];
     }
 
     private int getIndexForTa(String enterWord) {
@@ -133,7 +128,7 @@ public class AutomatAPD {
         for (String i : startSequence.split("")) {
             term+= i;
             for (String j : terms) {
-                if (j.equals(term)) {;
+                if (j.equals(term)) {
                     return term;
                 }
             }
