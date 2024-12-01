@@ -5,7 +5,7 @@ import java.util.*;
 public class PUGenerator {
     private List<String> nonTerminals = new ArrayList<>();
     private LinkedHashMap<String, ArrayList<String>> productions = new LinkedHashMap<>();
-    private List<String> someSets = new ArrayList<>();
+    private LinkedHashMap<String, ArrayList<String>> mappedTerms = new LinkedHashMap<>();
     private String startSymbol;
 
     public PUGenerator() {
@@ -38,12 +38,13 @@ public class PUGenerator {
         this.startSymbol = startSymbol;
 
         for (String term : nonTerminals) {
-            someSets.add(PRIM(term, startSymbol));
-            System.out.println(someSets);
+            LinkedHashMap<String, ArrayList<String>> temporary = PRIM(term, startSymbol);
+            mappedTerms.putAll(temporary);
+            System.out.println(mappedTerms);
         }
     }
 
-    private String PRIM(String term, String startSymbol) {
+    private LinkedHashMap<String, ArrayList<String>> PRIM(String term, String startSymbol) {
         ArrayList<String> temp =  productions.get(term);
         String firstNonTerminal = "";
         while(productionsContainsNTerminals(temp, startSymbol)){
@@ -54,8 +55,20 @@ public class PUGenerator {
             temp = productions.get(firstNonTerminal);
         }
         System.out.println("Stopped at: " + startSymbol + " with productions " + firstNonTerminal);
+        LinkedHashMap<String, ArrayList<String>> returnedMap = new LinkedHashMap<>();
+        if(firstNonTerminal.equals("")){
+            firstNonTerminal = productions.get(term).get(0).concat(", " + productions.get(term).get(1));
+            firstNonTerminal = formatProd(firstNonTerminal);
+        }
+        ArrayList<String> temporaryArray = new ArrayList<>();
+        temporaryArray.add(firstNonTerminal);
+        returnedMap.put(term, temporaryArray);
 
-        return term;
+        return returnedMap;
+    }
+
+    private String formatProd(String firstNonTerminal) {
+        return firstNonTerminal.replaceAll("[\\[\\]|]", "");
     }
 
     private boolean productionsContainsNTerminals(ArrayList<String> temp, String startSymbol) {
