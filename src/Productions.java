@@ -6,10 +6,10 @@ public class Productions {
     String[][]productions = new String[7][2];
 
     Productions(){
-        System.out.println("Finding productions");
+        System.out.println("Finding ProdToGenerate.txt");
         int index = 0;
         try {
-            File file = new File("D:\\repo\\GramaticaLR1\\src\\productions.txt");
+            File file = new File("D:\\repo\\GramaticaLR1\\src\\ProdToGenerate.txt.txt");
             Scanner sc = new Scanner(file);
             int indexLine=0;
             while(sc.hasNextLine()){

@@ -2,7 +2,7 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        AutomatAPD apd = new AutomatAPD();
-        apd.fabricate();
+        PUGenerator puGenerator = new PUGenerator();
+        puGenerator.generate();
     }
 }
