@@ -6,10 +6,11 @@ public class PUGenerator {
     private List<String> nonTerminals = new ArrayList<>();
     private LinkedHashMap<String, ArrayList<String>> productions = new LinkedHashMap<>();
     private List<String> someSets = new ArrayList<>();
+    private String startSymbol;
 
     public PUGenerator() {
         try {
-            File file = new File("W:\\tools\\repo\\GramaticaLR1\\src\\ProdToGenerate.txt");
+            File file = new File("D:\\repo\\GramaticaLR1\\src\\ProdToGenerate.txt");
             Scanner sc = new Scanner(file);
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
@@ -28,32 +29,14 @@ public class PUGenerator {
         }
     }
 
-    private String getFirstProduction(String term, LinkedHashMap<String, ArrayList<String>> map) {
-        ArrayList<String> production = map.get(term);
-        return production.get(0);
-    }
-
-    private String getSecondProduction(String term, LinkedHashMap<String, ArrayList<String>> map) {
-        ArrayList<String> production = map.get(term);
-        return production.get(1);
-    }
-
     public void generate() {
         String startSymbol = "";
-        String nonTerminal = "";
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter start symbol");
         startSymbol = sc.nextLine();
         System.out.println("Looping thorugh productions");
+        this.startSymbol = startSymbol;
 
-//        nonTerminal = startSymbol;
-//        while (true) {
-//            nonTerminal = findANonTerminal(nonTerminal);
-//            if (nonTerminal == null) {
-//                throw new RuntimeException("Terminal not found");
-//            }
-//
-//        }
         for (String term : nonTerminals) {
             someSets.add(PRIM(term, startSymbol));
         }
@@ -61,14 +44,15 @@ public class PUGenerator {
 
     private String PRIM(String term, String startSymbol) {
         ArrayList<String> temp =  productions.get(term);
-
+        String firstNonTerminal = "";
         while(productionsContainsNTerminals(temp, startSymbol)){
             System.out.println("Running through productions " + temp);
-            String firstNonTerminal = getFirstNonterminal(temp.toString(), startSymbol);
+            firstNonTerminal = getFirstNonterminal(temp.toString(), startSymbol);
+            if (firstNonTerminal.length() > 1) {break;}
             startSymbol = firstNonTerminal;
             temp = productions.get(firstNonTerminal);
         }
-
+        System.out.println("Stopped at: " + startSymbol + " with productions " + firstNonTerminal);
 
         return term;
     }
@@ -91,7 +75,7 @@ public class PUGenerator {
     private String getFirstNonterminal(String production, String startSymbol) {
         for (int i = 0; i < production.length(); i++) {
             String currentChar = production.charAt(i) + "";
-            if(currentChar.equals(startSymbol)) {
+            if(currentChar.equals(startSymbol) || currentChar.equals(this.startSymbol)) {
                 continue;
             }
             if (nonTerminals.contains(currentChar)) {
@@ -99,6 +83,9 @@ public class PUGenerator {
             }
         }
 
-        return null;
+        System.out.println("No more productions available " + production);
+        production = production.replaceAll("[\\[\\]|]", "");
+
+        return production;
     }
 }
