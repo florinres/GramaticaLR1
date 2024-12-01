@@ -39,6 +39,7 @@ public class PUGenerator {
 
         for (String term : nonTerminals) {
             someSets.add(PRIM(term, startSymbol));
+            System.out.println(someSets);
         }
     }
 
