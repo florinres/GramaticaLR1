@@ -42,6 +42,20 @@ public class PUGenerator {
             mappedTerms.putAll(temporary);
             System.out.println(mappedTerms);
         }
+
+        Stack<String> termsStack = new Stack<>();
+        for (String nonTerminal : nonTerminals) {
+            for (Map.Entry<String, ArrayList<String>> entry : productions.entrySet()) {
+                String key = entry.getKey();
+                ArrayList<String> rules = entry.getValue();
+
+                for (String production : rules) {
+                    if (production.contains(nonTerminal)) {
+                        termsStack.add(production);
+                    }
+                }
+            }
+        }
     }
 
     private LinkedHashMap<String, ArrayList<String>> PRIM(String term, String startSymbol) {
