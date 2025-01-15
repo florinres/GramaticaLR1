@@ -1,0 +1,56 @@
+Codul de mai sus este un parser pentru gramatici bazat pe conceptul de analiză sintactică de tip LR (Left-to-right, Rightmost derivation). Acesta simulează procesul de construire a tabelelor pentru un parser LR, inclusiv operațiunile de închidere (`closure`) și tranziții (`goTo`).
+
+### Explicație componentă cu componentă:
+
+#### Clasa `Gramatica`
+Aceasta reprezintă structura de bază a gramaticii utilizate în procesul de analiză:
+- **`terminale`**: Set de simboluri terminale (ex.: `a`, `+`, `id`).
+- **`neterminale`**: Set de simboluri neterminale (ex.: `E`, `T`, `F`).
+- **`productii`**: Lista de reguli de producție, unde fiecare regulă leagă un neterminal de o secvență de simboluri.
+- **`simbolStart`**: Simbolul de start al gramaticii.
+
+#### Clasa `Productions`
+Reprezintă o regulă de producție în gramatică:
+- **`left`**: Partea stângă a producției (un simbol neterminal).
+- **`right`**: Lista de simboluri (terminale și/sau neterminale) care alcătuiesc partea dreaptă.
+
+#### Clasa `Item`
+Reprezintă un element de analiză LR:
+- **`left`**: Simbolul neterminal din partea stângă.
+- **`right`**: Secvența simbolurilor din partea dreaptă.
+- **`dotPos`**: Poziția punctului, care indică până unde a fost procesată regula.
+- **`lookahead`**: Simbolul următor folosit pentru a decide reducerea.
+
+#### Funcția `citireGramatica`
+Construiește un obiect de tip `Gramatica` cu un set fix de reguli și simboluri.
+
+#### Funcția `closure`
+Calculează mulțimea închiderii pentru un set de elemente:
+1. Inițializează mulțimea de închidere cu elementele date.
+2. Iterează peste fiecare element pentru a identifica neterminalele ce urmează punctului.
+3. Adaugă toate producțiile corespunzătoare neterminalului găsit, setând punctul pe poziția inițială.
+4. Repetă procesul până când nu mai sunt adăugate elemente noi.
+
+#### Funcția `goTo`
+Simulează tranzițiile între stări:
+1. Verifică fiecare element pentru simbolul curent.
+2. Dacă punctul este înaintea simbolului, avansează punctul și creează un nou element.
+3. Returnează închiderea pentru noile elemente generate.
+
+#### Funcția `genereazaTabele`
+Construiește stările și tabelele necesare pentru un parser LR:
+1. Pornește cu starea inițială, calculată folosind `closure`.
+2. Generează noi stări și tranziții pe baza funcției `goTo`.
+3. Adaugă stările noi în lista de stări dacă nu sunt deja incluse.
+
+#### Funcția `main`
+1. Creează gramatica utilizând `citireGramatica`.
+2. Generează tabelele pentru analiză sintactică apelând `genereazaTabele`.
+
+---
+
+### Observații:
+- Codul include operațiuni esențiale pentru parser-ele LR, dar este incomplet în ceea ce privește generarea completă a tabelului de acțiuni și salturi.
+- Pentru claritate și extindere, tabelele de acțiuni și salturi pot fi afișate.
+
+Dacă ai întrebări suplimentare sau vrei să completezi tabelele și să le afișăm, anunță-mă!
