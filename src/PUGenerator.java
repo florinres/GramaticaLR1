@@ -5,7 +5,8 @@ import java.util.*;
 public class PUGenerator {
     private List<String> nonTerminals = new ArrayList<>();
     private LinkedHashMap<String, ArrayList<String>> productions = new LinkedHashMap<>();
-    private LinkedHashMap<String, ArrayList<String>> mappedTerms = new LinkedHashMap<>();
+    private LinkedHashMap<String, ArrayList<String>> primeLot = new LinkedHashMap<>();
+    private LinkedHashMap<String, ArrayList<String>> urmLot = new LinkedHashMap<>();
     private String startSymbol;
 
     public PUGenerator() {
@@ -39,23 +40,52 @@ public class PUGenerator {
 
         for (String term : nonTerminals) {
             LinkedHashMap<String, ArrayList<String>> temporary = PRIM(term, startSymbol);
-            mappedTerms.putAll(temporary);
-            System.out.println(mappedTerms);
+            primeLot.putAll(temporary);
+            System.out.println(primeLot);
         }
 
-        Stack<String> termsStack = new Stack<>();
-        for (String nonTerminal : nonTerminals) {
-            for (Map.Entry<String, ArrayList<String>> entry : productions.entrySet()) {
-                String key = entry.getKey();
-                ArrayList<String> rules = entry.getValue();
-
-                for (String production : rules) {
-                    if (production.contains(nonTerminal)) {
-                        termsStack.add(production);
-                    }
-                }
+        System.out.println("Finding urm, creating an array with all productions");
+        ArrayList<String> allProductions = new ArrayList<>();
+        for (String term : nonTerminals) {
+            System.out.println(productions.get(term));
+            for (String production : productions.get(term)) {
+                allProductions.add(production);
             }
         }
+        System.out.println(allProductions);
+
+        for (String nonTerminal : nonTerminals) {
+            System.out.println("Our term is " + nonTerminal);
+            for (String production : allProductions) {
+                if (production.contains(nonTerminal)) {
+                    ArrayList<String> temp = getAllTerminals(production);
+                    urmLot.put(nonTerminal, temp);
+                }
+            }
+
+        }
+
+        System.out.println(urmLot);
+
+    }
+
+    private ArrayList<String> getAllTerminals(String production) {
+        ArrayList<String> temp = new ArrayList<>();
+
+        for (int i = 0; i < production.length(); i++) {
+            String currentChar = production.charAt(i) + "";
+            if(currentChar.equals("|")){
+                continue;
+            }
+            if (currentChar.equals("(")) {
+                continue;
+            }
+            if(!nonTerminals.contains(currentChar)){
+                temp.add(currentChar);
+            }
+        }
+
+        return temp;
     }
 
     private LinkedHashMap<String, ArrayList<String>> PRIM(String term, String startSymbol) {
